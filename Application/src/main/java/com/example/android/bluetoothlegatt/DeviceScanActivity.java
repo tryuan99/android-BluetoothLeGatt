@@ -221,6 +221,10 @@ public class DeviceScanActivity extends ListActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            BluetoothDevice device = mLeDevices.get(i);
+            final String deviceName = device.getName();
+            AddressTempParser data = new AddressTempParser(device.getAddress());
+
             ViewHolder viewHolder;
             // General ListView optimization code.
             if (view == null) {
@@ -228,18 +232,22 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder = new ViewHolder();
                 viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
                 viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
+                viewHolder.deviceData = (TextView) view.findViewById(R.id.device_data);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
             }
 
-            BluetoothDevice device = mLeDevices.get(i);
-            final String deviceName = device.getName();
             if (deviceName != null && deviceName.length() > 0)
                 viewHolder.deviceName.setText(deviceName);
             else
                 viewHolder.deviceName.setText(R.string.unknown_device);
-            viewHolder.deviceAddress.setText(device.getAddress());
+            viewHolder.deviceAddress.setText(data.getAddress());
+
+            if (data.isTransmitterChip())
+                viewHolder.deviceData.setText(getString(R.string.temp_data, data.getTemp()));
+            else
+                viewHolder.deviceData.setText(R.string.not_transmitter_chip);
 
             return view;
         }
@@ -264,5 +272,6 @@ public class DeviceScanActivity extends ListActivity {
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+        TextView deviceData;
     }
 }

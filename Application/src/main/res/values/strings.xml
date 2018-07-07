@@ -28,6 +28,9 @@
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="temp_data">Temperature: %1$fC</string>
+    <string name="not_transmitter_chip">Not transmitter chip</string>
+
     <!-- Menu items -->
     <string name="menu_connect">Connect</string>
     <string name="menu_disconnect">Disconnect</string>
