@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -244,10 +245,13 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder.deviceName.setText(R.string.unknown_device);
             viewHolder.deviceAddress.setText(data.getAddress());
 
-            if (data.isTransmitterChip())
+            if (data.isTransmitterChip()) {
                 viewHolder.deviceData.setText(getString(R.string.temp_data, data.getTemp()));
-            else
+                view.setBackgroundColor(Color.LTGRAY);
+            } else {
                 viewHolder.deviceData.setText(R.string.not_transmitter_chip);
+                view.setBackgroundColor(Color.TRANSPARENT);
+            }
 
             return view;
         }
