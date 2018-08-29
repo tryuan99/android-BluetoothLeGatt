@@ -13,7 +13,7 @@ class AddressTempParser {
     private static final int PREFIX_LENGTH = 8;
     // First four bytes of device address of transmitter chip
     // private static final String TX_ADDRESS_PREFIX = "00027232";
-    private static final String TX_ADDRESS_PREFIX = "30DC3FA7";
+    private static final String TX_ADDRESS_PREFIX = "35ABE23B";
 
     private static final double KELVIN_TO_CELSIUS = -273.15;
 
