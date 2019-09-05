@@ -1,4 +1,4 @@
-package com.example.android.bluetoothlegatt;
+package com.android.scum.ble;
 
 import org.junit.Test;
 

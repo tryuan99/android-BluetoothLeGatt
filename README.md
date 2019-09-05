@@ -1,3 +1,3 @@
-# android-ble-temp
+# android-ble-scum
 
 Adapted from https://github.com/googlesamples/android-BluetoothLeGatt.

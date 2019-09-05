@@ -1,4 +1,4 @@
-package com.example.android.bluetoothlegatt;
+package com.android.scum.ble;
 
 /**
  * This class parses a device address for temperature data. It uses the first four bytes to identify

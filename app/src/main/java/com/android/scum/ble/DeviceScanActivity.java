@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.bluetoothlegatt;
+package com.android.scum.ble;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -183,17 +183,20 @@ public class DeviceScanActivity extends ListActivity {
     // Adapter for holding devices found through scanning.
     private class LeDeviceListAdapter extends BaseAdapter {
         private ArrayList<BluetoothDevice> mLeDevices;
+        private ArrayList<byte[]> mLeScanRecords;
         private LayoutInflater mInflator;
 
         public LeDeviceListAdapter() {
             super();
             mLeDevices = new ArrayList<BluetoothDevice>();
+            mLeScanRecords = new ArrayList<byte[]>();
             mInflator = DeviceScanActivity.this.getLayoutInflater();
         }
 
-        public void addDevice(BluetoothDevice device) {
+        public void addDevice(BluetoothDevice device, byte[] scanRecord) {
             if(!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
+                mLeScanRecords.add(scanRecord);
             }
         }
 
@@ -203,6 +206,7 @@ public class DeviceScanActivity extends ListActivity {
 
         public void clear() {
             mLeDevices.clear();
+            mLeScanRecords.clear();
         }
 
         @Override
@@ -224,16 +228,18 @@ public class DeviceScanActivity extends ListActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             BluetoothDevice device = mLeDevices.get(i);
             final String deviceName = device.getName();
-            AddressTempParser data = new AddressTempParser(device.getAddress());
+            // AddressTempParser data = new AddressTempParser(device.getAddress());
+            GAPDataParser data = new GAPDataParser(device.getAddress(), mLeScanRecords.get(i));
 
             ViewHolder viewHolder;
             // General ListView optimization code.
             if (view == null) {
                 view = mInflator.inflate(R.layout.listitem_device, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
-                viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
-                viewHolder.deviceData = (TextView) view.findViewById(R.id.device_data);
+                viewHolder.deviceAddress = view.findViewById(R.id.device_address);
+                viewHolder.deviceName = view.findViewById(R.id.device_name);
+                viewHolder.deviceTemp = view.findViewById(R.id.device_temp);
+                viewHolder.deviceData = view.findViewById(R.id.device_data);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
@@ -245,11 +251,19 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder.deviceName.setText(R.string.unknown_device);
             viewHolder.deviceAddress.setText(data.getAddress());
 
-            if (data.isTransmitterChip()) {
-                viewHolder.deviceData.setText(getString(R.string.temp_data, data.getTemp()));
+            if (data.isSCUM()) {
+                viewHolder.deviceTemp.setVisibility(View.VISIBLE);
+                viewHolder.deviceData.setVisibility(View.VISIBLE);
+
+                viewHolder.deviceTemp.setText(getString(R.string.temperature_data, data.getTemp()));
+                viewHolder.deviceData.setText(getString(R.string.data, data.getScanRecord()));
                 view.setBackgroundColor(Color.LTGRAY);
             } else {
-                viewHolder.deviceData.setText(R.string.not_transmitter_chip);
+                viewHolder.deviceTemp.setVisibility(View.GONE);
+                viewHolder.deviceData.setVisibility(View.GONE);
+
+                viewHolder.deviceTemp.setText("");
+                viewHolder.deviceData.setText("");
                 view.setBackgroundColor(Color.TRANSPARENT);
             }
 
@@ -262,11 +276,11 @@ public class DeviceScanActivity extends ListActivity {
             new BluetoothAdapter.LeScanCallback() {
 
         @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+        public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mLeDeviceListAdapter.addDevice(device);
+                    mLeDeviceListAdapter.addDevice(device, scanRecord);
                     mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             });
@@ -276,6 +290,7 @@ public class DeviceScanActivity extends ListActivity {
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+        TextView deviceTemp;
         TextView deviceData;
     }
 }
