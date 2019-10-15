@@ -30,7 +30,13 @@
         android:textSize="16dp" />
 
     <TextView
-        android:id="@+id/device_temp"
+        android:id="@+id/LC_tuning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/device_temperature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16dp"

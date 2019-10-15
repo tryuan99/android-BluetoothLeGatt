@@ -9,8 +9,8 @@ public class GAPDataParserTest {
     private static final String ADV_ADDRESS_NOT_SCUM = "00:02:72:32:80:C5";
     private static final byte[] SCAN_RECORD = {
             (byte) 0x06, (byte) 0x08, (byte) 0x53, (byte) 0x43, (byte) 0x55, (byte) 0x4D, (byte) 0x33, (byte) 0x03,
-            (byte) 0xC0, (byte) 0x7A, (byte) 0x53, (byte) 0x13, (byte) 0xD0, (byte) 0x00, (byte) 0x00, (byte) 0x00,
-            (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+            (byte) 0xC0, (byte) 0x7F, (byte) 0xFF, (byte) 0x03, (byte) 0xC1, (byte) 0x7A, (byte) 0x53, (byte) 0x0F,
+            (byte) 0xD0, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
             (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
@@ -49,8 +49,14 @@ public class GAPDataParserTest {
     }
 
     @Test
-    public void testGetTemp() {
+    public void testGetLCTuning() {
         GAPDataParser data = new GAPDataParser(GAPDataParserTest.ADV_ADDRESS, GAPDataParserTest.SCAN_RECORD);
-        assertEquals(40.0, data.getTemp(), 1e-3);
+        assertArrayEquals(new int[]{31, 31, 31}, data.getLCTuning());
+    }
+
+    @Test
+    public void testGetTemperature() {
+        GAPDataParser data = new GAPDataParser(GAPDataParserTest.ADV_ADDRESS, GAPDataParserTest.SCAN_RECORD);
+        assertEquals(40.0, data.getTemperature(), 1e-3);
     }
 }

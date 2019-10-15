@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -238,7 +239,8 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder = new ViewHolder();
                 viewHolder.deviceAddress = view.findViewById(R.id.device_address);
                 viewHolder.deviceName = view.findViewById(R.id.device_name);
-                viewHolder.deviceTemp = view.findViewById(R.id.device_temp);
+                viewHolder.deviceLCTuning = view.findViewById(R.id.LC_tuning);
+                viewHolder.deviceTemperature = view.findViewById(R.id.device_temperature);
                 viewHolder.deviceData = view.findViewById(R.id.device_data);
                 view.setTag(viewHolder);
             } else {
@@ -252,17 +254,21 @@ public class DeviceScanActivity extends ListActivity {
             viewHolder.deviceAddress.setText(data.getAddress());
 
             if (data.isSCUM()) {
-                viewHolder.deviceTemp.setVisibility(View.VISIBLE);
+                viewHolder.deviceLCTuning.setVisibility(View.VISIBLE);
+                viewHolder.deviceTemperature.setVisibility(View.VISIBLE);
                 viewHolder.deviceData.setVisibility(View.VISIBLE);
 
-                viewHolder.deviceTemp.setText(getString(R.string.temperature_data, data.getTemp()));
+                viewHolder.deviceLCTuning.setText(getString(R.string.LC_tuning_data, Arrays.toString(data.getLCTuning())));
+                viewHolder.deviceTemperature.setText(getString(R.string.temperature_data, data.getTemperature()));
                 viewHolder.deviceData.setText(getString(R.string.data, data.getScanRecord()));
                 view.setBackgroundColor(Color.LTGRAY);
             } else {
-                viewHolder.deviceTemp.setVisibility(View.GONE);
+                viewHolder.deviceLCTuning.setVisibility(View.GONE);
+                viewHolder.deviceTemperature.setVisibility(View.GONE);
                 viewHolder.deviceData.setVisibility(View.GONE);
 
-                viewHolder.deviceTemp.setText("");
+                viewHolder.deviceLCTuning.setText("");
+                viewHolder.deviceTemperature.setText("");
                 viewHolder.deviceData.setText("");
                 view.setBackgroundColor(Color.TRANSPARENT);
             }
@@ -290,7 +296,8 @@ public class DeviceScanActivity extends ListActivity {
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
-        TextView deviceTemp;
+        TextView deviceLCTuning;
+        TextView deviceTemperature;
         TextView deviceData;
     }
 }

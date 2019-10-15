@@ -13,8 +13,12 @@ class GAPDataParser {
     // Data fields
     private String name;
     private static final byte NAME_CODE = (byte) 0x08;
-    private double temp;
-    private static final byte TEMPERATURE_CODE = (byte) 0xC0;
+    private int coarse;
+    private int mid;
+    private int fine;
+    private static final byte LC_TUNE_CODE = (byte) 0xC0;
+    private double temperature;
+    private static final byte TEMPERATURE_CODE = (byte) 0xC1;
 
     // Constants
     private static final String ADV_ADDRESS = "0002723280C6";
@@ -49,8 +53,12 @@ class GAPDataParser {
         return this.name;
     }
 
-    double getTemp() {
-        return this.temp;
+    int[] getLCTuning() {
+        return new int[]{this.coarse, this.mid, this.fine};
+    }
+
+    double getTemperature() {
+        return this.temperature;
     }
 
     private void parseScanRecord() {
@@ -63,22 +71,36 @@ class GAPDataParser {
 
             byte code = this.scanRecord[offset++];
             switch (code) {
-                case GAPDataParser.NAME_CODE:
+                case GAPDataParser.NAME_CODE: {
                     this.name = new String(this.scanRecord, offset, length - 1);
                     offset += length - 1;
                     break;
-                case GAPDataParser.TEMPERATURE_CODE:
-                    StringBuilder sb = new StringBuilder((length - 1) * 2);
+                }
+                case GAPDataParser.LC_TUNE_CODE: {
+                    int LC_tune = 0;
                     for (int i = 0; i < length - 1; ++i) {
-                        sb.append(String.format("%02x", this.scanRecord[offset + i]));
+                        LC_tune = (LC_tune << 8) | (this.scanRecord[offset + i] & 0xFF);
                     }
-                    int tempData = Integer.parseInt(sb.toString(), 16);
-                    this.temp = ((double) tempData) / 100 + GAPDataParser.KELVIN_TO_CELSIUS;
+                    this.coarse = (LC_tune >> 10) & 0x1F;
+                    this.mid = (LC_tune >> 5) & 0x1F;
+                    this.fine = LC_tune & 0x1F;
+
                     offset += length - 1;
                     break;
-                default:
+                }
+                case GAPDataParser.TEMPERATURE_CODE: {
+                    int temperatureData = 0;
+                    for (int i = 0; i < length - 1; ++i) {
+                        temperatureData = (temperatureData << 8) | (this.scanRecord[offset + i] & 0xFF);
+                    }
+                    this.temperature = ((double) temperatureData) / 100 + GAPDataParser.KELVIN_TO_CELSIUS;
                     offset += length - 1;
                     break;
+                }
+                default: {
+                    offset += length - 1;
+                    break;
+                }
             }
         }
     }
