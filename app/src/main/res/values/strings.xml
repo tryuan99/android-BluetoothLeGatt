@@ -27,6 +27,7 @@
     <string name="unknown_characteristic">Unknown characteristic</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="rssi">RSSI: %d</string>
     <string name="data">Data: %s</string>
     <string name="LC_tuning_data">LC Tuning: %s</string>
     <string name="temperature_data">Temperature: %1$.2fC</string>

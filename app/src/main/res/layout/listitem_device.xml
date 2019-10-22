@@ -30,6 +30,12 @@
         android:textSize="16dp" />
 
     <TextView
+        android:id="@+id/rssi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16dp" />
+
+    <TextView
         android:id="@+id/LC_tuning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

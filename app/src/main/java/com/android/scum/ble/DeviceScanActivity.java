@@ -184,19 +184,22 @@ public class DeviceScanActivity extends ListActivity {
     // Adapter for holding devices found through scanning.
     private class LeDeviceListAdapter extends BaseAdapter {
         private ArrayList<BluetoothDevice> mLeDevices;
+        private ArrayList<Integer> mLeRSSIs;
         private ArrayList<byte[]> mLeScanRecords;
         private LayoutInflater mInflator;
 
         public LeDeviceListAdapter() {
             super();
             mLeDevices = new ArrayList<BluetoothDevice>();
+            mLeRSSIs = new ArrayList<Integer>();
             mLeScanRecords = new ArrayList<byte[]>();
             mInflator = DeviceScanActivity.this.getLayoutInflater();
         }
 
-        public void addDevice(BluetoothDevice device, byte[] scanRecord) {
+        public void addDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
             if(!mLeDevices.contains(device)) {
                 mLeDevices.add(device);
+                mLeRSSIs.add(rssi);
                 mLeScanRecords.add(scanRecord);
             }
         }
@@ -229,6 +232,7 @@ public class DeviceScanActivity extends ListActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             BluetoothDevice device = mLeDevices.get(i);
             final String deviceName = device.getName();
+            int rssi = mLeRSSIs.get(i);
             // AddressTempParser data = new AddressTempParser(device.getAddress());
             GAPDataParser data = new GAPDataParser(device.getAddress(), mLeScanRecords.get(i));
 
@@ -239,6 +243,7 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder = new ViewHolder();
                 viewHolder.deviceAddress = view.findViewById(R.id.device_address);
                 viewHolder.deviceName = view.findViewById(R.id.device_name);
+                viewHolder.deviceRSSI = view.findViewById(R.id.rssi);
                 viewHolder.deviceLCTuning = view.findViewById(R.id.LC_tuning);
                 viewHolder.deviceTemperature = view.findViewById(R.id.device_temperature);
                 viewHolder.deviceData = view.findViewById(R.id.device_data);
@@ -252,6 +257,7 @@ public class DeviceScanActivity extends ListActivity {
             else
                 viewHolder.deviceName.setText(R.string.unknown_device);
             viewHolder.deviceAddress.setText(data.getAddress());
+            viewHolder.deviceRSSI.setText(getString(R.string.rssi, rssi));
 
             if (data.isSCUM()) {
                 viewHolder.deviceLCTuning.setVisibility(View.VISIBLE);
@@ -282,11 +288,11 @@ public class DeviceScanActivity extends ListActivity {
             new BluetoothAdapter.LeScanCallback() {
 
         @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
+        public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mLeDeviceListAdapter.addDevice(device, scanRecord);
+                    mLeDeviceListAdapter.addDevice(device, rssi, scanRecord);
                     mLeDeviceListAdapter.notifyDataSetChanged();
                 }
             });
@@ -296,6 +302,7 @@ public class DeviceScanActivity extends ListActivity {
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
+        TextView deviceRSSI;
         TextView deviceLCTuning;
         TextView deviceTemperature;
         TextView deviceData;
