@@ -49,9 +49,21 @@ public class GAPDataParserTest {
     }
 
     @Test
+    public void testHasLCTuning() {
+        GAPDataParser data = new GAPDataParser(GAPDataParserTest.ADV_ADDRESS, GAPDataParserTest.SCAN_RECORD);
+        assertTrue(data.hasLCTuning());
+    }
+
+    @Test
     public void testGetLCTuning() {
         GAPDataParser data = new GAPDataParser(GAPDataParserTest.ADV_ADDRESS, GAPDataParserTest.SCAN_RECORD);
         assertArrayEquals(new int[]{31, 31, 31}, data.getLCTuning());
+    }
+
+    @Test
+    public void testHasTemperature() {
+        GAPDataParser data = new GAPDataParser(GAPDataParserTest.ADV_ADDRESS, GAPDataParserTest.SCAN_RECORD);
+        assertTrue(data.hasTemperature());
     }
 
     @Test
