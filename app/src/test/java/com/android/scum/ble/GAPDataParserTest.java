@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class GAPDataParserTest {
     private static final String ADV_ADDRESS = "00:02:72:32:80:C6";
-    private static final String ADV_ADDRESS_NOT_SCUM = "00:02:72:32:80:C5";
+    private static final String ADV_ADDRESS_NOT_SCUM = "00:02:72:32:81:C6";
     private static final byte[] SCAN_RECORD = {
             (byte) 0x06, (byte) 0x08, (byte) 0x53, (byte) 0x43, (byte) 0x55, (byte) 0x4D, (byte) 0x33, (byte) 0x03,
             (byte) 0xC0, (byte) 0x7F, (byte) 0xFF, (byte) 0x03, (byte) 0xC1, (byte) 0x7A, (byte) 0x53, (byte) 0x0F,

@@ -44,13 +44,13 @@ class GAPDataParser {
     }
 
     boolean isSCUM() {
-        return this.address.replace(":", "").equals(GAPDataParser.ADV_ADDRESS);
+        return this.address.replace(":", "").startsWith(GAPDataParser.ADV_ADDRESS.substring(0, GAPDataParser.ADV_ADDRESS.length() - 2));
     }
 
     String getScanRecord() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 31; ++i) {
-            sb.append(String.format("0x%02x ", this.scanRecord[i]));
+        for (byte b : this.scanRecord) {
+            sb.append(String.format("0x%02x ", b));
         }
         return sb.toString().trim();
     }
