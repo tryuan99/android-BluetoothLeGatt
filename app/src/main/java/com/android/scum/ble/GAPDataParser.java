@@ -25,6 +25,9 @@ class GAPDataParser {
     private boolean hasTemperature;
     private double temperature;
     private static final byte TEMPERATURE_CODE = (byte) 0xC1;
+    private boolean hasCustomData;
+    private byte[] customData;
+    private static final byte CUSTOM_DATA_CODE = (byte) 0xC3;
 
     // Constants
     private static final String ADV_ADDRESS = "0002723280C6";
@@ -33,6 +36,7 @@ class GAPDataParser {
     GAPDataParser(String address, byte[] scanRecord) {
         this.address = address;
         this.scanRecord = Arrays.copyOf(scanRecord, scanRecord.length);
+        this.customData = new byte[0];
 
         if (this.isSCUM()) {
             parseScanRecord();
@@ -89,6 +93,18 @@ class GAPDataParser {
 
     double getTemperature() {
         return this.temperature;
+    }
+
+    boolean hasCustomData() {
+        return this.hasCustomData;
+    }
+
+    String getCustomData() {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : this.customData) {
+            sb.append(String.format("0x%02x ", b));
+        }
+        return sb.toString().trim();
     }
 
     private void parseScanRecord() {
@@ -148,6 +164,14 @@ class GAPDataParser {
                         temperatureData = (temperatureData << 8) | (this.scanRecord[offset + i] & 0xFF);
                     }
                     this.temperature = ((double) temperatureData) / 100 + GAPDataParser.KELVIN_TO_CELSIUS;
+                    offset += length - 1;
+                    break;
+                }
+                case GAPDataParser.CUSTOM_DATA_CODE: {
+                    this.hasCustomData = true;
+
+                    this.customData = new byte[length - 1];
+                    System.arraycopy(this.scanRecord, offset, this.customData, 0, length - 1);
                     offset += length - 1;
                     break;
                 }

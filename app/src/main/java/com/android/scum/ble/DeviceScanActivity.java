@@ -237,12 +237,13 @@ public class DeviceScanActivity extends ListActivity {
             if (view == null) {
                 view = mInflator.inflate(R.layout.listitem_device, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = view.findViewById(R.id.device_address);
-                viewHolder.deviceName = view.findViewById(R.id.device_name);
+                viewHolder.deviceAddress = view.findViewById(R.id.address);
+                viewHolder.deviceName = view.findViewById(R.id.name);
                 viewHolder.deviceLCTuning = view.findViewById(R.id.LC_tuning);
                 viewHolder.deviceCounters = view.findViewById(R.id.counters);
-                viewHolder.deviceTemperature = view.findViewById(R.id.device_temperature);
-                viewHolder.deviceData = view.findViewById(R.id.device_data);
+                viewHolder.deviceTemperature = view.findViewById(R.id.temperature);
+                viewHolder.deviceData = view.findViewById(R.id.data);
+                viewHolder.devicePacket = view.findViewById(R.id.packet);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();
@@ -258,23 +259,27 @@ public class DeviceScanActivity extends ListActivity {
                 viewHolder.deviceLCTuning.setVisibility(data.hasLCTuning() ? View.VISIBLE : View.GONE);
                 viewHolder.deviceCounters.setVisibility(data.hasCounters() ? View.VISIBLE : View.GONE);
                 viewHolder.deviceTemperature.setVisibility(data.hasTemperature() ? View.VISIBLE : View.GONE);
-                viewHolder.deviceData.setVisibility(View.VISIBLE);
+                viewHolder.deviceData.setVisibility(data.hasCustomData() ? View.VISIBLE : View.GONE);
+                viewHolder.devicePacket.setVisibility(View.VISIBLE);
 
                 viewHolder.deviceLCTuning.setText(getString(R.string.LC_tuning_data, Arrays.toString(data.getLCTuning())));
                 viewHolder.deviceCounters.setText(getString(R.string.counters, data.getCount2M(), data.getCount32k(), data.getRatio()));
                 viewHolder.deviceTemperature.setText(getString(R.string.temperature_data, data.getTemperature()));
-                viewHolder.deviceData.setText(getString(R.string.data, data.getScanRecord()));
+                viewHolder.deviceData.setText(getString(R.string.data, data.getCustomData()));
+                viewHolder.devicePacket.setText(getString(R.string.packet, data.getScanRecord()));
                 view.setBackgroundColor(Color.LTGRAY);
             } else {
                 viewHolder.deviceLCTuning.setVisibility(View.GONE);
                 viewHolder.deviceCounters.setVisibility(View.GONE);
                 viewHolder.deviceTemperature.setVisibility(View.GONE);
                 viewHolder.deviceData.setVisibility(View.GONE);
+                viewHolder.devicePacket.setVisibility(View.GONE);
 
                 viewHolder.deviceLCTuning.setText("");
                 viewHolder.deviceCounters.setText("");
                 viewHolder.deviceTemperature.setText("");
                 viewHolder.deviceData.setText("");
+                viewHolder.devicePacket.setText("");
                 view.setBackgroundColor(Color.TRANSPARENT);
             }
 
@@ -305,5 +310,6 @@ public class DeviceScanActivity extends ListActivity {
         TextView deviceCounters;
         TextView deviceTemperature;
         TextView deviceData;
+        TextView devicePacket;
     }
 }
